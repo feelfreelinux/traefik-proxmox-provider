@@ -4,7 +4,6 @@ package types
 
 type ClientTLS struct {
 	CA                 string `json:"ca,omitempty"`
-	CAOptional         bool   `json:"caOptional,omitempty"`
 	Cert               string `json:"cert,omitempty"`
 	Key                string `json:"key,omitempty"`
 	InsecureSkipVerify bool   `json:"insecureSkipVerify,omitempty"`

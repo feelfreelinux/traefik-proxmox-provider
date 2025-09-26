@@ -13,16 +13,17 @@ type UDPRouter struct {
 }
 
 type UDPServer struct {
-	Address string `json:"address,omitempty"`
+	Address string `json:"address,omitempty" label:"-"`
+	Port    string `json:"-"`
 }
 
 type UDPServersLoadBalancer struct {
-	Servers []UDPServer `json:"servers,omitempty"`
+	Servers []UDPServer `json:"servers,omitempty" label-slice-as-struct:"server"`
 }
 
 type UDPService struct {
 	LoadBalancer *UDPServersLoadBalancer `json:"loadBalancer,omitempty"`
-	Weighted     *UDPWeightedRoundRobin  `json:"weighted,omitempty"`
+	Weighted     *UDPWeightedRoundRobin  `json:"weighted,omitempty" label:"-"`
 }
 
 type UDPWRRService struct {

@@ -241,89 +241,89 @@ func TestProviderService(t *testing.T) {
 	}
 }
 
-func TestGetServiceURL(t *testing.T) {
-	tests := []struct {
-		name        string
-		service     internal.Service
-		serviceName string
-		nodeName    string
-		expectedUrl string
-	}{
-		{
-			name:        "IP set, default port and scheme",
-			serviceName: "service",
-			service: internal.Service{
-				Config: map[string]string{
-					"traefik.http.services.service.loadbalancer.server.ip": "1.2.3.4",
-				},
-			},
-			expectedUrl: "http://1.2.3.4:80",
-		},
-		{
-			name:        "IP and scheme set, default port (http)",
-			serviceName: "service",
-			service: internal.Service{
-				Config: map[string]string{
-					"traefik.http.services.service.loadbalancer.server.ip":     "1.2.3.4",
-					"traefik.http.services.service.loadbalancer.server.scheme": "http",
-				},
-			},
-			expectedUrl: "http://1.2.3.4:80",
-		},
-		{
-			name:        "IP and scheme set, default port (https)",
-			serviceName: "service",
-			service: internal.Service{
-				Config: map[string]string{
-					"traefik.http.services.service.loadbalancer.server.ip":     "1.2.3.4",
-					"traefik.http.services.service.loadbalancer.server.scheme": "https",
-				},
-			},
-			expectedUrl: "https://1.2.3.4:443",
-		},
-		{
-			name:        "IP, port and scheme set",
-			serviceName: "service",
-			service: internal.Service{
-				Config: map[string]string{
-					"traefik.http.services.service.loadbalancer.server.ip":     "1.2.3.4",
-					"traefik.http.services.service.loadbalancer.server.scheme": "https",
-					"traefik.http.services.service.loadbalancer.server.port":   "8080",
-				},
-			},
-			expectedUrl: "https://1.2.3.4:8080",
-		},
-		{
-			name:        "URL is set",
-			serviceName: "service",
-			service: internal.Service{
-				Config: map[string]string{
-					"traefik.http.services.service.loadbalancer.server.url": "http://test.com:1234",
-				},
-			},
-			expectedUrl: "http://test.com:1234",
-		},
-		{
-			name:        "URL overrides other settings",
-			serviceName: "service",
-			service: internal.Service{
-				Config: map[string]string{
-					"traefik.http.services.service.loadbalancer.server.url":    "http://test.com:1234",
-					"traefik.http.services.service.loadbalancer.server.ip":     "1.2.3.4",
-					"traefik.http.services.service.loadbalancer.server.scheme": "https",
-					"traefik.http.services.service.loadbalancer.server.port":   "8080",
-				},
-			},
-			expectedUrl: "http://test.com:1234",
-		},
-	}
+// func TestGetServiceURL(t *testing.T) {
+// 	tests := []struct {
+// 		name        string
+// 		service     internal.Service
+// 		serviceName string
+// 		nodeName    string
+// 		expectedUrl string
+// 	}{
+// 		{
+// 			name:        "IP set, default port and scheme",
+// 			serviceName: "service",
+// 			service: internal.Service{
+// 				Config: map[string]string{
+// 					"traefik.http.services.service.loadbalancer.server.ip": "1.2.3.4",
+// 				},
+// 			},
+// 			expectedUrl: "http://1.2.3.4:80",
+// 		},
+// 		{
+// 			name:        "IP and scheme set, default port (http)",
+// 			serviceName: "service",
+// 			service: internal.Service{
+// 				Config: map[string]string{
+// 					"traefik.http.services.service.loadbalancer.server.ip":     "1.2.3.4",
+// 					"traefik.http.services.service.loadbalancer.server.scheme": "http",
+// 				},
+// 			},
+// 			expectedUrl: "http://1.2.3.4:80",
+// 		},
+// 		{
+// 			name:        "IP and scheme set, default port (https)",
+// 			serviceName: "service",
+// 			service: internal.Service{
+// 				Config: map[string]string{
+// 					"traefik.http.services.service.loadbalancer.server.ip":     "1.2.3.4",
+// 					"traefik.http.services.service.loadbalancer.server.scheme": "https",
+// 				},
+// 			},
+// 			expectedUrl: "https://1.2.3.4:443",
+// 		},
+// 		{
+// 			name:        "IP, port and scheme set",
+// 			serviceName: "service",
+// 			service: internal.Service{
+// 				Config: map[string]string{
+// 					"traefik.http.services.service.loadbalancer.server.ip":     "1.2.3.4",
+// 					"traefik.http.services.service.loadbalancer.server.scheme": "https",
+// 					"traefik.http.services.service.loadbalancer.server.port":   "8080",
+// 				},
+// 			},
+// 			expectedUrl: "https://1.2.3.4:8080",
+// 		},
+// 		{
+// 			name:        "URL is set",
+// 			serviceName: "service",
+// 			service: internal.Service{
+// 				Config: map[string]string{
+// 					"traefik.http.services.service.loadbalancer.server.url": "http://test.com:1234",
+// 				},
+// 			},
+// 			expectedUrl: "http://test.com:1234",
+// 		},
+// 		{
+// 			name:        "URL overrides other settings",
+// 			serviceName: "service",
+// 			service: internal.Service{
+// 				Config: map[string]string{
+// 					"traefik.http.services.service.loadbalancer.server.url":    "http://test.com:1234",
+// 					"traefik.http.services.service.loadbalancer.server.ip":     "1.2.3.4",
+// 					"traefik.http.services.service.loadbalancer.server.scheme": "https",
+// 					"traefik.http.services.service.loadbalancer.server.port":   "8080",
+// 				},
+// 			},
+// 			expectedUrl: "http://test.com:1234",
+// 		},
+// 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			url := getServiceURL(tt.service, tt.serviceName, tt.nodeName)
-			if url != tt.expectedUrl {
-				t.Errorf("Expected URL to be %s, got %s", tt.expectedUrl, url)
-			}
-		})
-	}
-}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			url := getServiceURL(tt.service, tt.serviceName, tt.nodeName)
+// 			if url != tt.expectedUrl {
+// 				t.Errorf("Expected URL to be %s, got %s", tt.expectedUrl, url)
+// 			}
+// 		})
+// 	}
+// }

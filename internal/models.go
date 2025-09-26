@@ -61,10 +61,6 @@ type IP struct {
 	Prefix      uint64 `json:"prefix,omitempty"`
 }
 
-func NewService(id uint64, name string, config map[string]string) Service {
-	return Service{ID: id, Name: name, Config: config, IPs: make([]IP, 0)}
-}
-
 func (pc *ParsedConfig) GetTraefikMap() map[string]string {
 	const separator = "="
 
@@ -84,6 +80,10 @@ func (pc *ParsedConfig) GetTraefikMap() map[string]string {
 		}
 	}
 	return m
+}
+
+func NewService(id uint64, name string, config map[string]string) Service {
+	return Service{ID: id, Name: name, Config: config, IPs: make([]IP, 0)}
 }
 
 func (pai *ParsedAgentInterfaces) GetIPs() []IP {
